@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public GameObject powerupPrefab;
+    public GameObject[] enemyPrefab;
+    public GameObject[] powerupPrefab;
 
     float spawnRange = 9;
 
@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         SpawnEnemy(waveNum);
-        Instantiate(powerupPrefab, GetSpawnPosition(), powerupPrefab.transform.rotation);
+        SpawnPowerup();
     }
 
     // Update is called once per frame
@@ -36,15 +36,21 @@ public class GameController : MonoBehaviour
         if (enemyCount == 0)
         {
             SpawnEnemy(++waveNum);
-            Instantiate(powerupPrefab, GetSpawnPosition(), powerupPrefab.transform.rotation);
+            SpawnPowerup();
         }
     }
     void SpawnEnemy(int numSpawn)
     {
         for (int i = 0; i < numSpawn; i++)
         {
-            Instantiate(enemyPrefab, GetSpawnPosition(), enemyPrefab.transform.rotation);
+            int index = Random.Range(0, enemyPrefab.Length);
+            Instantiate(enemyPrefab[index], GetSpawnPosition(), enemyPrefab[index].transform.rotation);
         }
+    }
+    void SpawnPowerup()
+    {
+        int index = Random.Range(0, powerupPrefab.Length);
+        Instantiate(powerupPrefab[index], GetSpawnPosition(), powerupPrefab[index].transform.rotation);
     }
     public Vector3 GetSpawnPosition ()
     {

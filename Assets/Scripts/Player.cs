@@ -28,10 +28,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y < -10)
+        if (transform.position.y < -5)
         {
             gameController.SetIsGameOver(true);
-            //Destroy(gameObject);
         }
         float verticalInput = Input.GetAxis("Vertical");
         playerRb.AddForce(focalPoint.transform.forward * playerSpeed * verticalInput);
@@ -39,6 +38,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F) && currentPowerUp == PowerUp.PowerUpType.Rockets)
         {
+            //Instantiate(rocketPrefab, transform.position + Vector3.forward, rocketPrefab.transform.rotation);
             LauchRockets();
         }
     }
@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
     {
         foreach (var enemy in FindObjectsOfType<Enemy>())
         {
-            tmpRocket = Instantiate(rocketPrefab, transform.position + Vector3.forward, Quaternion.identity);
+            tmpRocket = Instantiate(rocketPrefab, transform.position + Vector3.forward, rocketPrefab.transform.rotation);
             tmpRocket.GetComponent<Rockets>().Fire(enemy.transform);
         }
     }

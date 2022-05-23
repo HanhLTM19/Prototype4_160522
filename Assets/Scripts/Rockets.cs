@@ -22,9 +22,9 @@ public class Rockets : MonoBehaviour
         if (homing && target != null)
         {
             Vector3 moveDirection = (target.transform.position - transform.position).normalized;
-            transform.position += moveDirection * speed * Time.deltaTime;
+            transform.position = transform.position + moveDirection * speed * Time.deltaTime;
             transform.LookAt(target);// di chuyen theo doi tuong
-        }    
+        }
     }
 
     public void Fire (Transform newTarget)

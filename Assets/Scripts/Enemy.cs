@@ -25,5 +25,10 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (tag == "BossEnemy")
+        {
+
+        }
     }
 }

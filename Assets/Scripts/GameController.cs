@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour
 {
     public GameObject[] enemyPrefab;
     public GameObject[] powerupPrefab;
+    public GameObject enemyBoss;
 
     float spawnRange = 9;
 
@@ -37,6 +38,10 @@ public class GameController : MonoBehaviour
         {
             SpawnEnemy(++waveNum);
             SpawnPowerup();
+            if (waveNum % 5 == 0)
+            {
+                SpawnBossEnemy();
+            }
         }
     }
     void SpawnEnemy(int numSpawn)
@@ -46,6 +51,10 @@ public class GameController : MonoBehaviour
             int index = Random.Range(0, enemyPrefab.Length);
             Instantiate(enemyPrefab[index], GetSpawnPosition(), enemyPrefab[index].transform.rotation);
         }
+    }
+    void SpawnBossEnemy ()
+    {
+        Instantiate(enemyBoss, GetSpawnPosition(), enemyBoss.transform.rotation);
     }
     void SpawnPowerup()
     {

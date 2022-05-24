@@ -17,9 +17,18 @@ public class Player : MonoBehaviour
     private GameObject tmpRocket;
     private Coroutine powerupCountdown;
 
+    // Smash
+    public float explosionForce;
+    public float explosionRadius;
+    public float hangTime;
+    public float smashSpeed;
+    public bool isOnGround;
+    float floorY;
+
     // Start is called before the first frame update
     void Start()
     {
+        isOnGround = true;
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
 
@@ -36,10 +45,16 @@ public class Player : MonoBehaviour
         playerRb.AddForce(focalPoint.transform.forward * playerSpeed * verticalInput);
         powerupIndicator.transform.position = transform.position + new Vector3 (0, -0.5f, 0);
 
-        if (Input.GetKeyDown(KeyCode.F) && currentPowerUp == PowerUp.PowerUpType.Rockets)
+        if (Input.GetKeyDown(KeyCode.D) && currentPowerUp == PowerUp.PowerUpType.Rockets)
         {
             //Instantiate(rocketPrefab, transform.position + Vector3.forward, rocketPrefab.transform.rotation);
             LauchRockets();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space)&& isOnGround && currentPowerUp == PowerUp.PowerUpType.Smash) 
+        {
+            isOnGround = false;
+            playerRb.AddForce(Vector3.up * smashSpeed, ForceMode.Impulse);
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -68,7 +83,34 @@ public class Player : MonoBehaviour
             enemyRb.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
             Debug.Log("Player collided with " + collision.gameObject.name + " with powerup set to " + currentPowerUp.ToString());
         }
+        if (collision.gameObject.CompareTag("Ground") && !isOnGround && currentPowerUp == PowerUp.PowerUpType.Smash)
+        {
+            isOnGround = true;
+            Collider[] coliders = Physics.OverlapSphere(transform.position, explosionRadius);
+            foreach (Collider nearby in coliders)
+            {
+                Rigidbody m_rigidbody = nearby.GetComponent<Rigidbody>();
+                if (m_rigidbody != null)
+                {
+                    m_rigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius, 0.05f, ForceMode.Impulse);
+                }
+            }
+        }
+        
     }
+    /*private void SmashPowerUp()
+    {
+        Collider[] coliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider nearby in coliders)
+        {
+            Rigidbody m_rigidbody = nearby.GetComponent<Rigidbody>();
+            if (m_rigidbody != null)
+            {
+                m_rigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius, 0.05f, ForceMode.Impulse);
+            }
+        }
+      
+    }*/
     void LauchRockets()
     {
         foreach (var enemy in FindObjectsOfType<Enemy>())
